@@ -1,0 +1,378 @@
+{
+  "info": {
+    "_postman_id": "68f81329-b4ba-41c8-9854-cb2900a576cd",
+    "name": "Travel App API Gateway",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51595451",
+    "_collection_link": "https://go.postman.co/collection/51595451-68f81329-b4ba-41c8-9854-cb2900a576cd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Josh\",\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8001/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8001",
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Destination",
+      "item": [
+        {
+          "name": "Geocode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/travel/geocode?city=Tokyo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "travel",
+                "geocode"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Tokyo"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Weather",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/travel/weather?city=Tokyo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "travel",
+                "weather"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Tokyo"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Hotels",
+      "item": [
+        {
+          "name": "readHotels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8004/hotels/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8004",
+              "path": [
+                "hotels",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createHotel",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"hotel_name\": \"BugBusters Hotel\",\r\n  \"city\": \"Tokyo\",\r\n  \"address\": \"Shibuya, Tokyo\",\r\n  \"price_per_night\": 150.00,\r\n  \"rating\": 4.6\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8004/hotels",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8004",
+              "path": [
+                "hotels"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "readHotels by ID",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "updateHotel by ID",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"hotel_name\": \"Tokyo Grand Hotel Updated\",\r\n  \"city\": \"Tokyo\",\r\n  \"address\": \"Updated Address, Tokyo\",\r\n  \"price_per_night\": 130.00,\r\n  \"rating\": 4.8\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8004/hotels/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8004",
+              "path": [
+                "hotels",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteHotel by ID",
+          "request": {
+            "method": "DELETE",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Booking",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"hotel_id\": 1,\n  \"check_in\": \"2026-04-20\",\n  \"check_out\": \"2026-04-22\",\n  \"total_amount\": 240.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8005/booking",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8005",
+              "path": [
+                "booking"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "mine"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getBooking by ID",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Make Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"booking_id\": 1,\r\n  \"amount\": 240.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8005/payment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8005",
+              "path": [
+                "payment"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

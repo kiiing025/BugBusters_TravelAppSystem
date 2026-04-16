@@ -1,16 +1,8 @@
 <<<<<<< HEAD
-# Travel App API Gateway Project Template
+# Travel App API Gateway Project 
 
 This is a starter project folder for your Travel App API Gateway System.
-It is a scaffold, not a finished running Lumen app yet.
 
-## Included
-- complete project folder structure
-- starter SQL files
-- starter docs files
-- per-service notes
-- API list
-- step-by-step setup guide
 
 ## Service Order
 1. auth-service
