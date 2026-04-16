@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Travel App API Gateway Project Template
 
 This is a starter project folder for your Travel App API Gateway System.
@@ -21,3 +22,6 @@ It is a scaffold, not a finished running Lumen app yet.
 
 ## Quick Start
 Open `START-HERE.md` first.
+=======
+# BugBusters_TravelAppSystem
+>>>>>>> db4017a4664d34a265f8adc121ebe1c084463170
