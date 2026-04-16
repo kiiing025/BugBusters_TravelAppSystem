@@ -1,0 +1,7 @@
+Suggested local ports:
+8000 api-gateway
+8001 auth-service
+8002 weather-service
+8003 maps-service
+8004 hotels-service
+8005 payment-service

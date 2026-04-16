@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS hotels (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  hotel_name VARCHAR(100) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  price_per_night DECIMAL(10,2) NOT NULL,
+  rating DECIMAL(2,1) DEFAULT 0.0
+);
+
+CREATE TABLE IF NOT EXISTS bookings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  hotel_id INT NOT NULL,
+  check_in DATE NOT NULL,
+  check_out DATE NOT NULL,
+  total_amount DECIMAL(10,2) NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending'
+);
