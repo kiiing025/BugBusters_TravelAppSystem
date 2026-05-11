@@ -25,10 +25,10 @@
               "raw": "{\n  \"full_name\": \"Josh\",\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "http://localhost:8001/register",
+              "raw": "http://api-gateway:8000/register",
               "protocol": "http",
               "host": [
-                "localhost"
+                "api-gateway"
               ],
               "port": "8001",
               "path": [
@@ -152,10 +152,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8004/hotels/1",
+              "raw": "http://api-gateway:8000/hotels/1",
               "protocol": "http",
               "host": [
-                "localhost"
+                "api-gateway"
               ],
               "port": "8004",
               "path": [
@@ -181,10 +181,10 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8004/hotels",
+              "raw": "http://api-gateway:8000/hotels",
               "protocol": "http",
               "host": [
-                "localhost"
+                "api-gateway"
               ],
               "port": "8004",
               "path": [
@@ -217,10 +217,10 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8004/hotels/1",
+              "raw": "http://api-gateway:8000/hotels/1",
               "protocol": "http",
               "host": [
-                "localhost"
+                "api-gateway"
               ],
               "port": "8004",
               "path": [
@@ -263,10 +263,10 @@
               "raw": "{\n  \"user_id\": 1,\n  \"hotel_id\": 1,\n  \"check_in\": \"2026-04-20\",\n  \"check_out\": \"2026-04-22\",\n  \"total_amount\": 240.00\n}"
             },
             "url": {
-              "raw": "http://localhost:8005/booking",
+              "raw": "http://api-gateway:8000/booking",
               "protocol": "http",
               "host": [
-                "localhost"
+                "api-gateway"
               ],
               "port": "8005",
               "path": [
@@ -327,10 +327,10 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8005/payment",
+              "raw": "http://api-gateway:8000/payment",
               "protocol": "http",
               "host": [
-                "localhost"
+                "api-gateway"
               ],
               "port": "8005",
               "path": [
@@ -368,7 +368,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:5000/api"
+      "value": "http://api-gateway:8000"
     },
     {
       "key": "token",

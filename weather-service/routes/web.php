@@ -5,17 +5,11 @@
 $router->get('/', function () {
     return response()->json([
         'status' => 'success',
-        'message' => 'Weather Service root works',
-        'data' => []
+        'message' => 'Weather Service is running',
+        'data' => [
+            'provider' => config('services.open_meteo.forecast_url'),
+        ],
     ]);
 });
 
-$router->get('/weather', function () {
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Weather route works',
-        'data' => [
-            'city' => 'Tokyo'
-        ]
-    ]);
-});
+$router->get('/weather', 'WeatherController@getWeather');
