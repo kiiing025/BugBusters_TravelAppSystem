@@ -2,157 +2,211 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuthService;
+use App\Services\HotelsService;
+use App\Services\MapsService;
+use App\Services\PaymentService;
+use App\Services\WeatherService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class GatewayController extends Controller
 {
-    private function sendRequest($method, $url, $payload = null)
-    {
-        $ch = curl_init();
-
-        $headers = [
-            'Content-Type: application/json',
-            'Accept: application/json'
-        ];
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-        if ($payload !== null) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        }
-
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            $error = curl_error($ch);
-            curl_close($ch);
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gateway cURL error: ' . $error,
-                'data' => []
-            ], 500);
-        }
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        $decoded = json_decode($response, true);
-
-        if ($decoded === null) {
-            return response($response, $httpCode)->header('Content-Type', 'application/json');
-        }
-
-        return response()->json($decoded, $httpCode);
+    public function __construct(
+        private AuthService $authService,
+        private WeatherService $weatherService,
+        private MapsService $mapsService,
+        private HotelsService $hotelsService,
+        private PaymentService $paymentService
+    ) {
     }
 
     public function register(Request $request)
     {
-        return $this->sendRequest('POST', env('AUTH_SERVICE_URL') . '/register', [
-            'full_name' => $request->input('full_name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password')
+        $this->validate($request, [
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
         ]);
+
+        return $this->serviceResponse($this->authService->register($request->only([
+            'full_name',
+            'email',
+            'password',
+        ])));
     }
 
     public function login(Request $request)
     {
-        return $this->sendRequest('POST', env('AUTH_SERVICE_URL') . '/login', [
-            'email' => $request->input('email'),
-            'password' => $request->input('password')
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
+
+        return $this->serviceResponse($this->authService->login($request->only([
+            'email',
+            'password',
+        ])));
     }
 
     public function profile($id)
     {
-        return $this->sendRequest('GET', env('AUTH_SERVICE_URL') . '/profile/' . $id);
+        return $this->serviceResponse($this->authService->profile($id));
     }
 
     public function weather(Request $request)
     {
-        return $this->sendRequest('GET', env('WEATHER_SERVICE_URL') . '/weather?city=' . urlencode($request->query('city')));
+        $this->validate($request, [
+            'city' => 'required_without:location|string|max:100',
+            'location' => 'required_without:city|string|max:100',
+        ]);
+
+        return $this->serviceResponse($this->weatherService->current([
+            'city' => $request->query('city', $request->query('location')),
+        ]));
     }
 
     public function geocode(Request $request)
     {
-        return $this->sendRequest('GET', env('MAPS_SERVICE_URL') . '/geocode?city=' . urlencode($request->query('city')));
+        $this->validate($request, [
+            'city' => 'required|string|max:100',
+        ]);
+
+        return $this->serviceResponse($this->mapsService->geocode($request->query('city')));
+    }
+
+    public function travelSearch(Request $request)
+    {
+        $this->validate($request, [
+            'city' => 'required|string|max:100',
+        ]);
+
+        $city = $request->query('city');
+        $location = $this->mapsService->geocode($city);
+        $weather = $this->weatherService->current(['city' => $city]);
+        $hotels = $this->hotelsService->all(['city' => $city]);
+
+        $statusCode = max(
+            $this->normalizeStatusCode($location['status_code']),
+            $this->normalizeStatusCode($weather['status_code']),
+            $this->normalizeStatusCode($hotels['status_code'])
+        );
+
+        return response()->json([
+            'status' => $statusCode >= Response::HTTP_BAD_REQUEST ? 'partial_error' : 'success',
+            'message' => 'Travel search response built by the gateway from maps, weather, and hotels services.',
+            'data' => [
+                'city' => $city,
+                'location' => $location['body'],
+                'weather' => $weather['body'],
+                'hotels' => $hotels['body'],
+            ],
+        ], $statusCode);
     }
 
     public function createHotel(Request $request)
     {
-        return $this->sendRequest('POST', env('HOTELS_SERVICE_URL') . '/hotels', [
-            'hotel_name' => $request->input('hotel_name'),
-            'city' => $request->input('city'),
-            'address' => $request->input('address'),
-            'price_per_night' => $request->input('price_per_night'),
-            'rating' => $request->input('rating')
-        ]);
+        $this->validateHotel($request);
+
+        return $this->serviceResponse($this->hotelsService->create($request->only([
+            'hotel_name',
+            'city',
+            'address',
+            'price_per_night',
+            'rating',
+        ])));
     }
 
     public function hotels(Request $request)
     {
-        $url = env('HOTELS_SERVICE_URL') . '/hotels';
-
-        if ($request->query('city')) {
-            $url .= '?city=' . urlencode($request->query('city'));
-        }
-
-        return $this->sendRequest('GET', $url);
+        return $this->serviceResponse($this->hotelsService->all([
+            'city' => $request->query('city'),
+        ]));
     }
 
     public function hotelById($id)
     {
-        return $this->sendRequest('GET', env('HOTELS_SERVICE_URL') . '/hotels/' . $id);
+        return $this->serviceResponse($this->hotelsService->find($id));
     }
 
     public function updateHotel(Request $request, $id)
     {
-        return $this->sendRequest('PUT', env('HOTELS_SERVICE_URL') . '/hotels/' . $id, [
-            'hotel_name' => $request->input('hotel_name'),
-            'city' => $request->input('city'),
-            'address' => $request->input('address'),
-            'price_per_night' => $request->input('price_per_night'),
-            'rating' => $request->input('rating')
-        ]);
+        $this->validateHotel($request);
+
+        return $this->serviceResponse($this->hotelsService->update($id, $request->only([
+            'hotel_name',
+            'city',
+            'address',
+            'price_per_night',
+            'rating',
+        ])));
     }
 
     public function deleteHotel($id)
     {
-        return $this->sendRequest('DELETE', env('HOTELS_SERVICE_URL') . '/hotels/' . $id);
+        return $this->serviceResponse($this->hotelsService->delete($id));
     }
 
     public function createBooking(Request $request)
     {
-        return $this->sendRequest('POST', env('PAYMENT_SERVICE_URL') . '/booking', [
-            'user_id' => $request->input('user_id'),
-            'hotel_id' => $request->input('hotel_id'),
-            'check_in' => $request->input('check_in'),
-            'check_out' => $request->input('check_out'),
-            'total_amount' => $request->input('total_amount')
+        $this->validate($request, [
+            'user_id' => 'required|integer',
+            'hotel_id' => 'required|integer',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date',
+            'total_amount' => 'required|numeric',
         ]);
+
+        return $this->serviceResponse($this->paymentService->createBooking($request->only([
+            'user_id',
+            'hotel_id',
+            'check_in',
+            'check_out',
+            'total_amount',
+        ])));
     }
 
     public function makePayment(Request $request)
     {
-        return $this->sendRequest('POST', env('PAYMENT_SERVICE_URL') . '/payment', [
-            'booking_id' => $request->input('booking_id'),
-            'amount' => $request->input('amount')
+        $this->validate($request, [
+            'booking_id' => 'required|integer',
+            'amount' => 'required|numeric',
         ]);
+
+        return $this->serviceResponse($this->paymentService->makePayment($request->only([
+            'booking_id',
+            'amount',
+        ])));
     }
 
     public function getBookings()
     {
-        return $this->sendRequest('GET', env('PAYMENT_SERVICE_URL') . '/bookings');
+        return $this->serviceResponse($this->paymentService->bookings());
     }
 
     public function getBookingById($id)
     {
-        return $this->sendRequest('GET', env('PAYMENT_SERVICE_URL') . '/bookings/' . $id);
+        return $this->serviceResponse($this->paymentService->booking($id));
+    }
+
+    private function serviceResponse(array $serviceResult)
+    {
+        return response()->json($serviceResult['body'], $serviceResult['status_code']);
+    }
+
+    private function normalizeStatusCode(int $statusCode): int
+    {
+        return $statusCode >= Response::HTTP_BAD_REQUEST ? $statusCode : Response::HTTP_OK;
+    }
+
+    private function validateHotel(Request $request): void
+    {
+        $this->validate($request, [
+            'hotel_name' => 'required|string|max:255',
+            'city' => 'required|string|max:100',
+            'address' => 'required|string|max:255',
+            'price_per_night' => 'required|numeric',
+            'rating' => 'required|numeric|min:0|max:5',
+        ]);
     }
 }
