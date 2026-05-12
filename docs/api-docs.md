@@ -6,13 +6,17 @@
 http://api-gateway:8000
 ```
 
-All business endpoints are routed through the API Gateway. Send this header on each protected request:
+## Public Header
 
 ```http
-X-API-KEY: change-me-gateway-key
+X-API-KEY: your-gateway-key
 ```
 
-## Routes
+## Public Routes
+
+### Health
+
+- `GET /health`
 
 ### Auth
 
@@ -22,16 +26,17 @@ X-API-KEY: change-me-gateway-key
 
 ### Travel Data
 
-- `GET /weather?city=Davao`
-- `GET /geocode?city=Davao`
-- `GET /travel-search?city=Davao`
-
-`/travel-search` is the gateway aggregation endpoint. It calls the Maps, Weather, and Hotels services and combines their responses.
+- `GET /weather?city=Tokyo`
+- `GET /geocode?city=Tokyo`
+- `GET /country?country=Japan`
+- `GET /currency?base=PHP&quote=USD&amount=100`
+- `GET /travel-guide?topic=Tokyo`
+- `GET /travel-search?city=Tokyo`
 
 ### Hotels
 
 - `GET /hotels`
-- `GET /hotels?city=Davao`
+- `GET /hotels?city=Tokyo`
 - `POST /hotels`
 - `GET /hotels/{id}`
 - `PUT /hotels/{id}`
@@ -43,3 +48,7 @@ X-API-KEY: change-me-gateway-key
 - `GET /bookings`
 - `GET /bookings/{id}`
 - `POST /payment`
+
+## Internal Note
+
+Downstream services are not meant to be called directly from the client. They expect the gateway's internal secret and are protected by middleware.

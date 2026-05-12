@@ -31,6 +31,7 @@ abstract class BaseApiService
         $headers = [
             'Accept: application/json',
             'Content-Type: application/json',
+            'User-Agent: BugBustersTravelApp/1.0',
         ];
 
         if (!empty($this->serviceSecret)) {
@@ -40,6 +41,7 @@ abstract class BaseApiService
         curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 20,
             CURLOPT_CUSTOMREQUEST => strtoupper($method),
             CURLOPT_HTTPHEADER => $headers,
@@ -55,7 +57,7 @@ abstract class BaseApiService
             $message = curl_error($curl);
             curl_close($curl);
 
-            return $this->errorResponse('Gateway service request failed: ' . $message, Response::HTTP_BAD_GATEWAY);
+            return $this->errorResponse('Remote service request failed: ' . $message, Response::HTTP_BAD_GATEWAY);
         }
 
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE) ?: Response::HTTP_OK;

@@ -1,23 +1,43 @@
 # Architecture
 
-Client -> API Gateway -> Auth / Weather / Maps / Hotels / Payment
+## Flow
 
-## API Gateway Responsibilities
+Client -> API Gateway -> Internal Services -> External APIs
 
-- Acts as the single client entry point.
-- Protects gateway routes with `X-API-KEY` API-key authentication.
-- Loads downstream service URLs from `api-gateway/config/services.php`.
-- Keeps downstream API calls in separate service classes under `api-gateway/app/Services`.
-- Provides `GET /travel-search`, where one gateway controller action calls Maps, Weather, and Hotels services.
+The five backend microservices are grouped inside `services/`.
 
-## Services
+## Gateway Responsibilities
 
-- Auth Service: local database-backed user registration, login, and profile APIs.
-- Weather Service: external Open-Meteo weather API integration.
-- Maps Service: external Open-Meteo geocoding API integration.
-- Hotels Service: local database-backed hotel APIs.
-- Payment Service: local database-backed booking and simulated payment APIs.
+- Enforces the public `X-API-KEY` header.
+- Routes all client traffic through one entry point.
+- Aggregates responses from several services in one controller action.
+- Sends `X-Internal-Service-Key` to downstream services.
+
+## Internal Services
+
+- Auth Service: registration, login, and profile storage.
+- Weather Service: Open-Meteo forecast lookup.
+- Maps Service: Open-Meteo geocoding lookup.
+- Hotels Service: hotel catalog CRUD.
+- Payment Service: booking and payment CRUD.
+
+## External APIs
+
+- Open-Meteo Geocoding API
+- Open-Meteo Weather Forecast API
+- REST Countries API
+- Frankfurter currency API
+- Wikipedia REST API
+
+## Security Model
+
+- Public clients talk to the gateway only.
+- The gateway is protected with `X-API-KEY`.
+- The downstream services accept only the gateway's internal secret.
+- Root and health routes stay public for service checks.
 
 ## Deployment Notes
 
-Use environment variables for service discovery. The examples avoid hardcoded loopback URLs and use deployable hostnames such as `http://auth-service:8000`.
+- Use service-name URLs, not `localhost`.
+- Configure the gateway and each service with its `.env.example`.
+- Keep the MySQL databases separate for auth, hotels, and payment.

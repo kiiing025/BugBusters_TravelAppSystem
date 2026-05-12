@@ -1,0 +1,100 @@
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./api-gateway/.env.example
+    depends_on:
+      - auth-service
+      - weather-service
+      - maps-service
+      - hotels-service
+      - payment-service
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+    ports:
+      - "8001:8000"
+    env_file:
+      - ./services/auth-service/.env.example
+    depends_on:
+      - mysql-auth
+
+  weather-service:
+    build:
+      context: ./services/weather-service
+    ports:
+      - "8002:8000"
+    env_file:
+      - ./services/weather-service/.env.example
+
+  maps-service:
+    build:
+      context: ./services/maps-service
+    ports:
+      - "8003:8000"
+    env_file:
+      - ./services/maps-service/.env.example
+
+  hotels-service:
+    build:
+      context: ./services/hotels-service
+    ports:
+      - "8004:8000"
+    env_file:
+      - ./services/hotels-service/.env.example
+    depends_on:
+      - mysql-hotels
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+    ports:
+      - "8005:8000"
+    env_file:
+      - ./services/payment-service/.env.example
+    depends_on:
+      - mysql-payment
+
+  mysql-auth:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: travel_auth
+      MYSQL_USER: travel_user
+      MYSQL_PASSWORD: change-me
+    ports:
+      - "33061:3306"
+    volumes:
+      - ./database/auth.sql:/docker-entrypoint-initdb.d/01-auth.sql:ro
+
+  mysql-hotels:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: travel_hotels
+      MYSQL_USER: travel_user
+      MYSQL_PASSWORD: change-me
+    ports:
+      - "33062:3306"
+    volumes:
+      - ./database/hotels.sql:/docker-entrypoint-initdb.d/01-hotels.sql:ro
+      - ./database/sample_data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro
+
+  mysql-payment:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: travel_payment
+      MYSQL_USER: travel_user
+      MYSQL_PASSWORD: change-me
+    ports:
+      - "33063:3306"
+    volumes:
+      - ./database/payment.sql:/docker-entrypoint-initdb.d/01-payment.sql:ro

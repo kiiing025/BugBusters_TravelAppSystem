@@ -1,26 +1,54 @@
-# Lumen PHP Framework
+# API Gateway
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/lumen-framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/lumen-framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/lumen)](https://packagist.org/packages/laravel/lumen-framework)
+This service is the only public entry point for the travel system.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## Public Rules
 
-> **Note:** In the years since releasing Lumen, PHP has made a variety of wonderful performance improvements. For this reason, along with the availability of [Laravel Octane](https://laravel.com/docs/octane), we no longer recommend that you begin new projects with Lumen. Instead, we recommend always beginning new projects with [Laravel](https://laravel.com).
+- Send `X-API-KEY` on every protected request.
+- Use `GET /health` for a public health check.
+- Call the gateway instead of the downstream services directly.
 
-## Official Documentation
+## Internal Routing
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+The gateway forwards requests to:
 
-## Contributing
+- `auth-service`
+- `weather-service`
+- `maps-service`
+- `hotels-service`
+- `payment-service`
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+It also talks to these external APIs:
 
-## Security Vulnerabilities
+- Open-Meteo Geocoding API
+- Open-Meteo Weather Forecast API
+- REST Countries API
+- Frankfurter currency API
+- Wikipedia REST API
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+## Main Endpoints
 
-## License
+- `POST /register`
+- `POST /login`
+- `GET /profile/{id}`
+- `GET /weather`
+- `GET /geocode`
+- `GET /country`
+- `GET /currency`
+- `GET /travel-guide`
+- `GET /travel-search`
+- `GET /hotels`
+- `POST /hotels`
+- `GET /hotels/{id}`
+- `PUT /hotels/{id}`
+- `DELETE /hotels/{id}`
+- `POST /booking`
+- `POST /payment`
+- `GET /bookings`
+- `GET /bookings/{id}`
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Notes
+
+- Downstream services require `X-Internal-Service-Key`.
+- The gateway keeps all client-facing security in one place.
+- All service URLs are configured in `config/services.php`.

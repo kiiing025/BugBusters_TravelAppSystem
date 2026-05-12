@@ -2,11 +2,30 @@
   "info": {
     "_postman_id": "68f81329-b4ba-41c8-9854-cb2900a576cd",
     "name": "Travel App API Gateway",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "51595451",
-    "_collection_link": "https://go.postman.co/collection/51595451-68f81329-b4ba-41c8-9854-cb2900a576cd?source=collection_link"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
     {
       "name": "Auth",
       "item": [
@@ -18,25 +37,26 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"full_name\": \"Josh\",\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
+              "raw": "{\n  \"full_name\": \"Josh Cruz\",\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "http://api-gateway:8000/register",
-              "protocol": "http",
+              "raw": "http://{{baseUrl}}/register",
               "host": [
-                "api-gateway"
+                "{{baseUrl}}"
               ],
-              "port": "8001",
               "path": [
                 "register"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Login",
@@ -46,6 +66,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
               }
             ],
             "body": {
@@ -53,17 +77,15 @@
               "raw": "{\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/login",
+              "raw": "http://{{baseUrl}}/login",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "auth",
                 "login"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Profile",
@@ -71,64 +93,43 @@
             "method": "GET",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/auth/profile",
+              "raw": "http://{{baseUrl}}/profile/1",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "auth",
-                "profile"
+                "profile",
+                "1"
               ]
             }
-          },
-          "response": []
+          }
         }
       ]
     },
     {
-      "name": "Destination",
+      "name": "Travel",
       "item": [
-        {
-          "name": "Geocode",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/travel/geocode?city=Tokyo",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "travel",
-                "geocode"
-              ],
-              "query": [
-                {
-                  "key": "city",
-                  "value": "Tokyo"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
         {
           "name": "Weather",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/travel/weather?city=Tokyo",
+              "raw": "http://{{baseUrl}}/weather?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "travel",
                 "weather"
               ],
               "query": [
@@ -138,8 +139,150 @@
                 }
               ]
             }
-          },
-          "response": []
+          }
+        },
+        {
+          "name": "Geocode",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/geocode?city=Tokyo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "geocode"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Tokyo"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Country",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/country?country=Japan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "country"
+              ],
+              "query": [
+                {
+                  "key": "country",
+                  "value": "Japan"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Currency",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/currency?base=PHP&quote=USD&amount=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "currency"
+              ],
+              "query": [
+                {
+                  "key": "base",
+                  "value": "PHP"
+                },
+                {
+                  "key": "quote",
+                  "value": "USD"
+                },
+                {
+                  "key": "amount",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Travel Guide",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/travel-guide?topic=Tokyo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "travel-guide"
+              ],
+              "query": [
+                {
+                  "key": "topic",
+                  "value": "Tokyo"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Travel Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/travel-search?city=Tokyo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "travel-search"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Tokyo"
+                }
+              ]
+            }
+          }
         }
       ]
     },
@@ -147,97 +290,134 @@
       "name": "Hotels",
       "item": [
         {
-          "name": "readHotels",
+          "name": "List Hotels",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
             "url": {
-              "raw": "http://api-gateway:8000/hotels/1",
-              "protocol": "http",
+              "raw": "http://{{baseUrl}}/hotels?city=Tokyo",
               "host": [
-                "api-gateway"
+                "{{baseUrl}}"
               ],
-              "port": "8004",
               "path": [
-                "hotels",
-                "1"
+                "hotels"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Tokyo"
+                }
               ]
             }
-          },
-          "response": []
+          }
         },
         {
-          "name": "createHotel",
+          "name": "Create Hotel",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"hotel_name\": \"BugBusters Hotel\",\r\n  \"city\": \"Tokyo\",\r\n  \"address\": \"Shibuya, Tokyo\",\r\n  \"price_per_night\": 150.00,\r\n  \"rating\": 4.6\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"hotel_name\": \"BugBusters Hotel\",\n  \"city\": \"Tokyo\",\n  \"address\": \"Shibuya, Tokyo\",\n  \"price_per_night\": 150.00,\n  \"rating\": 4.6\n}"
             },
             "url": {
-              "raw": "http://api-gateway:8000/hotels",
-              "protocol": "http",
+              "raw": "http://{{baseUrl}}/hotels",
               "host": [
-                "api-gateway"
+                "{{baseUrl}}"
               ],
-              "port": "8004",
               "path": [
                 "hotels"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
-          "name": "readHotels by ID",
+          "name": "Get Hotel",
           "request": {
             "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "updateHotel by ID",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"hotel_name\": \"Tokyo Grand Hotel Updated\",\r\n  \"city\": \"Tokyo\",\r\n  \"address\": \"Updated Address, Tokyo\",\r\n  \"price_per_night\": 130.00,\r\n  \"rating\": 4.8\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
               }
-            },
+            ],
             "url": {
-              "raw": "http://api-gateway:8000/hotels/1",
-              "protocol": "http",
+              "raw": "http://{{baseUrl}}/hotels/1",
               "host": [
-                "api-gateway"
+                "{{baseUrl}}"
               ],
-              "port": "8004",
               "path": [
                 "hotels",
                 "1"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
-          "name": "deleteHotel by ID",
+          "name": "Update Hotel",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hotel_name\": \"Tokyo Grand Hotel\",\n  \"city\": \"Tokyo\",\n  \"address\": \"Updated Address, Tokyo\",\n  \"price_per_night\": 130.00,\n  \"rating\": 4.8\n}"
+            },
+            "url": {
+              "raw": "http://{{baseUrl}}/hotels/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hotels",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Hotel",
           "request": {
             "method": "DELETE",
-            "header": []
-          },
-          "response": []
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/hotels/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hotels",
+                "1"
+              ]
+            }
+          }
         }
       ]
     },
@@ -254,113 +434,96 @@
                 "value": "application/json"
               },
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"user_id\": 1,\n  \"hotel_id\": 1,\n  \"check_in\": \"2026-04-20\",\n  \"check_out\": \"2026-04-22\",\n  \"total_amount\": 240.00\n}"
+              "raw": "{\n  \"user_id\": 1,\n  \"hotel_id\": 1,\n  \"check_in\": \"2026-05-20\",\n  \"check_out\": \"2026-05-22\",\n  \"total_amount\": 240.00\n}"
             },
             "url": {
-              "raw": "http://api-gateway:8000/booking",
-              "protocol": "http",
+              "raw": "http://{{baseUrl}}/booking",
               "host": [
-                "api-gateway"
+                "{{baseUrl}}"
               ],
-              "port": "8005",
               "path": [
                 "booking"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
-          "name": "My Bookings",
+          "name": "List Bookings",
           "request": {
             "method": "GET",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/bookings/mine",
+              "raw": "http://{{baseUrl}}/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Booking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{baseUrl}}/bookings/1",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "bookings",
-                "mine"
+                "1"
               ]
             }
-          },
-          "response": []
+          }
         },
-        {
-          "name": "getBooking by ID",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Payment",
-      "item": [
         {
           "name": "Make Payment",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-KEY",
+                "value": "{{gatewayKey}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"booking_id\": 1,\r\n  \"amount\": 240.00\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"booking_id\": 1,\n  \"amount\": 240.00\n}"
             },
             "url": {
-              "raw": "http://api-gateway:8000/payment",
-              "protocol": "http",
-              "host": [
-                "api-gateway"
-              ],
-              "port": "8005",
-              "path": [
-                "payment"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "System",
-      "item": [
-        {
-          "name": "Health Check",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/health",
+              "raw": "http://{{baseUrl}}/payment",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "health"
+                "payment"
               ]
             }
-          },
-          "response": []
+          }
         }
       ]
     }
@@ -368,11 +531,11 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://api-gateway:8000"
+      "value": "api-gateway:8000"
     },
     {
-      "key": "token",
-      "value": ""
+      "key": "gatewayKey",
+      "value": "change-me-gateway-key"
     }
   ]
 }

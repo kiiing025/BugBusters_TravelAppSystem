@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\AuthService;
+use App\Services\CountryService;
+use App\Services\CurrencyService;
 use App\Services\HotelsService;
 use App\Services\MapsService;
 use App\Services\PaymentService;
+use App\Services\TravelGuideService;
 use App\Services\WeatherService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,7 +20,10 @@ class GatewayController extends Controller
         private WeatherService $weatherService,
         private MapsService $mapsService,
         private HotelsService $hotelsService,
-        private PaymentService $paymentService
+        private PaymentService $paymentService,
+        private CountryService $countryService,
+        private CurrencyService $currencyService,
+        private TravelGuideService $travelGuideService
     ) {
     }
 
@@ -57,13 +63,33 @@ class GatewayController extends Controller
     public function weather(Request $request)
     {
         $this->validate($request, [
-            'city' => 'required_without:location|string|max:100',
-            'location' => 'required_without:city|string|max:100',
+            'city' => 'required|string|max:100',
         ]);
 
-        return $this->serviceResponse($this->weatherService->current([
-            'city' => $request->query('city', $request->query('location')),
-        ]));
+        $city = trim($request->query('city'));
+        $location = $this->mapsService->geocode($city);
+
+        $locationData = $this->extractData($location);
+        $weather = $this->weatherService->current([
+            'city' => $city,
+            'latitude' => $locationData['latitude'] ?? null,
+            'longitude' => $locationData['longitude'] ?? null,
+        ]);
+
+        $statusCode = max(
+            $this->normalizeStatusCode($location['status_code']),
+            $this->normalizeStatusCode($weather['status_code'])
+        );
+
+        return response()->json([
+            'status' => $statusCode >= Response::HTTP_BAD_REQUEST ? 'partial_error' : 'success',
+            'message' => 'Weather response assembled by the gateway using maps and weather services.',
+            'data' => [
+                'city' => $city,
+                'location' => $locationData,
+                'weather' => $this->extractData($weather),
+            ],
+        ], $statusCode);
     }
 
     public function geocode(Request $request)
@@ -75,31 +101,90 @@ class GatewayController extends Controller
         return $this->serviceResponse($this->mapsService->geocode($request->query('city')));
     }
 
+    public function country(Request $request)
+    {
+        $this->validate($request, [
+            'country' => 'required_without:country_code|string|max:100',
+            'country_code' => 'required_without:country|string|max:3',
+        ]);
+
+        $countryName = $request->query('country');
+        $countryCode = $request->query('country_code');
+
+        return $this->serviceResponse($this->countryService->fetch($countryName ?: $countryCode, $countryCode));
+    }
+
+    public function currency(Request $request)
+    {
+        $this->validate($request, [
+            'base' => 'required|string|max:3',
+            'quote' => 'required|string|max:3',
+            'amount' => 'nullable|numeric|min:0',
+        ]);
+
+        return $this->serviceResponse($this->currencyService->convert(
+            $request->query('base'),
+            $request->query('quote'),
+            (float) $request->query('amount', 1)
+        ));
+    }
+
+    public function travelGuide(Request $request)
+    {
+        $this->validate($request, [
+            'topic' => 'required|string|max:255',
+        ]);
+
+        return $this->serviceResponse($this->travelGuideService->summary($request->query('topic')));
+    }
+
     public function travelSearch(Request $request)
     {
         $this->validate($request, [
             'city' => 'required|string|max:100',
         ]);
 
-        $city = $request->query('city');
+        $city = trim($request->query('city'));
         $location = $this->mapsService->geocode($city);
-        $weather = $this->weatherService->current(['city' => $city]);
+        $locationData = $this->extractData($location);
+        $weather = $this->weatherService->current([
+            'city' => $city,
+            'latitude' => $locationData['latitude'] ?? null,
+            'longitude' => $locationData['longitude'] ?? null,
+        ]);
+        $country = $this->countryService->fetch(
+            $locationData['country'] ?? $city,
+            $locationData['country_code'] ?? null
+        );
+        $countryData = $this->extractData($country);
+        $currency = $this->currencyService->convert(
+            'PHP',
+            $countryData['currency_code'] ?? 'USD',
+            100
+        );
+        $guide = $this->travelGuideService->summary($locationData['city'] ?? $city);
         $hotels = $this->hotelsService->all(['city' => $city]);
 
         $statusCode = max(
             $this->normalizeStatusCode($location['status_code']),
             $this->normalizeStatusCode($weather['status_code']),
+            $this->normalizeStatusCode($country['status_code']),
+            $this->normalizeStatusCode($currency['status_code']),
+            $this->normalizeStatusCode($guide['status_code']),
             $this->normalizeStatusCode($hotels['status_code'])
         );
 
         return response()->json([
             'status' => $statusCode >= Response::HTTP_BAD_REQUEST ? 'partial_error' : 'success',
-            'message' => 'Travel search response built by the gateway from maps, weather, and hotels services.',
+            'message' => 'Travel search response built by the gateway from five external APIs plus the hotels service.',
             'data' => [
                 'city' => $city,
-                'location' => $location['body'],
-                'weather' => $weather['body'],
-                'hotels' => $hotels['body'],
+                'location' => $locationData,
+                'weather' => $this->extractData($weather),
+                'country' => $this->extractData($country),
+                'currency' => $this->extractData($currency),
+                'travel_guide' => $this->extractData($guide),
+                'hotels' => $this->extractData($hotels),
             ],
         ], $statusCode);
     }
@@ -192,6 +277,13 @@ class GatewayController extends Controller
     private function serviceResponse(array $serviceResult)
     {
         return response()->json($serviceResult['body'], $serviceResult['status_code']);
+    }
+
+    private function extractData(array $serviceResult, array $default = []): array
+    {
+        $data = $serviceResult['body']['data'] ?? $default;
+
+        return is_array($data) ? $data : $default;
     }
 
     private function normalizeStatusCode(int $statusCode): int
