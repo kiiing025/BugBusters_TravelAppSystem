@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BugBusters Travel Gateway</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#dashboard" aria-label="BugBusters Travel home">
+          <span class="brand-mark">B</span>
+          <span>
+            <strong>BugBusters</strong>
+            <small>Travel Gateway</small>
+          </span>
+        </a>
+
+        <nav class="nav-links">
+          <a class="nav-link is-active" href="#dashboard" data-view-link="dashboard">
+            <span class="nav-dot"></span>
+            Dashboard
+          </a>
+          <a class="nav-link" href="#search" data-view-link="search">
+            <span class="nav-dot"></span>
+            Destination Search
+          </a>
+          <a class="nav-link" href="#weather" data-view-link="weather">
+            <span class="nav-dot"></span>
+            Weather & Map
+          </a>
+          <a class="nav-link" href="#hotels" data-view-link="hotels">
+            <span class="nav-dot"></span>
+            Hotels
+          </a>
+          <a class="nav-link" href="#booking" data-view-link="booking">
+            <span class="nav-dot"></span>
+            Booking
+          </a>
+        </nav>
+
+        <section class="gateway-card" aria-label="Gateway status">
+          <span class="status-pill">Online</span>
+          <h2>API Gateway</h2>
+          <p>Client requests use one secured URL and one public key.</p>
+          <code>X-API-KEY</code>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Travel App API Gateway System</p>
+            <h1>Plan, search, book, and pay through one travel gateway.</h1>
+          </div>
+          <div class="profile-chip">
+            <span>JC</span>
+            <div>
+              <strong>Josh Cruz</strong>
+              <small>Demo traveler</small>
+            </div>
+          </div>
+        </header>
+
+        <section class="view is-visible" id="dashboard" data-view="dashboard">
+          <div class="hero-panel">
+            <div class="hero-copy">
+              <p class="eyebrow">Featured Destination</p>
+              <h2>Tokyo, Japan</h2>
+              <p>
+                A modern travel search experience using maps, weather, country,
+                currency, guide, hotels, booking, and payment services.
+              </p>
+              <div class="hero-actions">
+                <button class="primary-btn" type="button" data-open-view="search">Search Tokyo</button>
+                <button class="ghost-btn" type="button" data-open-view="booking">Open booking</button>
+              </div>
+            </div>
+            <div class="hero-image" role="img" aria-label="Tokyo skyline at night"></div>
+          </div>
+
+          <div class="service-grid" aria-label="Backend service overview">
+            <article class="service-tile">
+              <span class="service-code">01</span>
+              <h3>Auth</h3>
+              <p>Register, login, profile lookup.</p>
+            </article>
+            <article class="service-tile">
+              <span class="service-code">02</span>
+              <h3>Maps</h3>
+              <p>City geocoding and coordinates.</p>
+            </article>
+            <article class="service-tile">
+              <span class="service-code">03</span>
+              <h3>Weather</h3>
+              <p>Live forecast from Open-Meteo.</p>
+            </article>
+            <article class="service-tile">
+              <span class="service-code">04</span>
+              <h3>Hotels</h3>
+              <p>Listings, details, and prices.</p>
+            </article>
+            <article class="service-tile">
+              <span class="service-code">05</span>
+              <h3>Payment</h3>
+              <p>Booking and payment status.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="search" data-view="search">
+          <div class="section-heading">
+            <p class="eyebrow">GET /travel-search</p>
+            <h2>Destination Search</h2>
+          </div>
+
+          <form class="search-bar" id="destinationForm">
+            <label>
+              <span>Destination city</span>
+              <input id="destinationInput" type="text" value="Tokyo" />
+            </label>
+            <button class="primary-btn" type="submit">Search</button>
+          </form>
+
+          <div class="search-layout">
+            <article class="destination-result">
+              <div class="destination-photo" role="img" aria-label="Tokyo city street"></div>
+              <div>
+                <span class="status-pill">Aggregated result</span>
+                <h3 id="destinationTitle">Tokyo, Japan</h3>
+                <p id="destinationSummary">
+                  Neon streets, transit access, food districts, hotels, live weather,
+                  and currency data combined through the gateway.
+                </p>
+                <div class="tag-row">
+                  <span>Maps</span>
+                  <span>Weather</span>
+                  <span>Country</span>
+                  <span>Currency</span>
+                  <span>Hotels</span>
+                </div>
+              </div>
+            </article>
+
+            <aside class="response-panel">
+              <h3>Gateway response</h3>
+              <dl>
+                <div>
+                  <dt>Country</dt>
+                  <dd id="countryValue">Japan</dd>
+                </div>
+                <div>
+                  <dt>Currency</dt>
+                  <dd id="currencyValue">JPY</dd>
+                </div>
+                <div>
+                  <dt>Hotels</dt>
+                  <dd>3 available</dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>Success</dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="weather" data-view="weather">
+          <div class="section-heading">
+            <p class="eyebrow">Maps + Weather Services</p>
+            <h2>Weather & Map Result</h2>
+          </div>
+
+          <div class="weather-map-layout">
+            <section class="weather-card">
+              <span class="status-pill">Live forecast</span>
+              <h3>Tokyo</h3>
+              <strong>24°C</strong>
+              <p>Light breeze, humidity 62%, low rain chance.</p>
+              <div class="forecast-row">
+                <span>Mon<br /><b>24°</b></span>
+                <span>Tue<br /><b>25°</b></span>
+                <span>Wed<br /><b>23°</b></span>
+                <span>Thu<br /><b>26°</b></span>
+                <span>Fri<br /><b>24°</b></span>
+              </div>
+            </section>
+
+            <section class="map-card" aria-label="Map result">
+              <div class="map-grid">
+                <span class="map-pin primary">1</span>
+                <span class="map-pin secondary">2</span>
+                <span class="route route-a"></span>
+                <span class="route route-b"></span>
+              </div>
+              <div class="map-meta">
+                <h3>Geocoding result</h3>
+                <p>Latitude 35.6895 · Longitude 139.6917</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="hotels" data-view="hotels">
+          <div class="section-heading">
+            <p class="eyebrow">Hotels Service</p>
+            <h2>Hotel Listing</h2>
+          </div>
+
+          <div class="hotel-list" id="hotelList">
+            <article class="hotel-card is-selected" data-hotel="BugBusters Hotel" data-price="300">
+              <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=720&q=80" alt="Hotel pool and resort exterior" />
+              <div>
+                <span class="status-pill">4.6 rating</span>
+                <h3>BugBusters Hotel</h3>
+                <p>Shibuya, Tokyo · 2 nights · near transit</p>
+                <strong>$150/night</strong>
+              </div>
+            </article>
+            <article class="hotel-card" data-hotel="Tokyo Grand Hotel" data-price="260">
+              <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=720&q=80" alt="Modern hotel lobby" />
+              <div>
+                <span class="status-pill">4.8 rating</span>
+                <h3>Tokyo Grand Hotel</h3>
+                <p>Chiyoda, Tokyo · business district access</p>
+                <strong>$130/night</strong>
+              </div>
+            </article>
+            <article class="hotel-card" data-hotel="Sakura Stay" data-price="216">
+              <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=720&q=80" alt="Warm modern hotel room" />
+              <div>
+                <span class="status-pill">4.4 rating</span>
+                <h3>Sakura Stay</h3>
+                <p>Asakusa, Tokyo · quiet neighborhood</p>
+                <strong>$108/night</strong>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="booking" data-view="booking">
+          <div class="section-heading">
+            <p class="eyebrow">POST /booking + POST /payment</p>
+            <h2>Booking & Payment</h2>
+          </div>
+
+          <div class="booking-layout">
+            <form class="booking-form" id="bookingForm">
+              <label>
+                <span>Full name</span>
+                <input type="text" value="Josh Cruz" />
+              </label>
+              <label>
+                <span>Email</span>
+                <input type="email" value="josh@example.com" />
+              </label>
+              <label>
+                <span>Check in</span>
+                <input type="date" value="2026-05-20" />
+              </label>
+              <label>
+                <span>Check out</span>
+                <input type="date" value="2026-05-22" />
+              </label>
+              <label class="full-width">
+                <span>Card number</span>
+                <input type="text" value="4242 4242 4242 4242" />
+              </label>
+              <button class="primary-btn full-width" type="submit">Pay now</button>
+            </form>
+
+            <aside class="checkout-summary">
+              <span class="status-pill">Selected hotel</span>
+              <h3 id="selectedHotel">BugBusters Hotel</h3>
+              <p>Tokyo · May 20-22 · 2 guests</p>
+              <dl>
+                <div>
+                  <dt>Room total</dt>
+                  <dd id="roomTotal">$300.00</dd>
+                </div>
+                <div>
+                  <dt>Taxes</dt>
+                  <dd>$24.00</dd>
+                </div>
+                <div class="total-row">
+                  <dt>Total</dt>
+                  <dd id="grandTotal">$324.00</dd>
+                </div>
+              </dl>
+              <div class="confirmation" id="confirmationBox" aria-live="polite">
+                Booking confirmation will appear here after payment.
+              </div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
