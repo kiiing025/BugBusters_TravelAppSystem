@@ -38,3 +38,4 @@
 - Add live URLs and screenshots after deployment.
 - Use container hostnames or deployment hostnames, not `localhost`.
 - Start the stack with `docker compose up --build` from the repository root.
+- For Render deployment steps, see `docs/render-deployment.md`.

@@ -14,7 +14,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://{{baseUrl}}/health",
+              "raw": "{{baseUrl}}/health",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -48,7 +48,7 @@
               "raw": "{\n  \"full_name\": \"Josh Cruz\",\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "http://{{baseUrl}}/register",
+              "raw": "{{baseUrl}}/register",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -77,7 +77,7 @@
               "raw": "{\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "http://{{baseUrl}}/login",
+              "raw": "{{baseUrl}}/login",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -98,7 +98,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/profile/1",
+              "raw": "{{baseUrl}}/profile/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -125,7 +125,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/weather?city=Tokyo",
+              "raw": "{{baseUrl}}/weather?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -152,7 +152,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/geocode?city=Tokyo",
+              "raw": "{{baseUrl}}/geocode?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -179,7 +179,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/country?country=Japan",
+              "raw": "{{baseUrl}}/country?country=Japan",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -206,7 +206,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/currency?base=PHP&quote=USD&amount=100",
+              "raw": "{{baseUrl}}/currency?base=PHP&quote=USD&amount=100",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -241,7 +241,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/travel-guide?topic=Tokyo",
+              "raw": "{{baseUrl}}/travel-guide?topic=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -268,7 +268,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/travel-search?city=Tokyo",
+              "raw": "{{baseUrl}}/travel-search?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -300,7 +300,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/hotels?city=Tokyo",
+              "raw": "{{baseUrl}}/hotels?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -335,7 +335,7 @@
               "raw": "{\n  \"hotel_name\": \"BugBusters Hotel\",\n  \"city\": \"Tokyo\",\n  \"address\": \"Shibuya, Tokyo\",\n  \"price_per_night\": 150.00,\n  \"rating\": 4.6\n}"
             },
             "url": {
-              "raw": "http://{{baseUrl}}/hotels",
+              "raw": "{{baseUrl}}/hotels",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -356,7 +356,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/hotels/1",
+              "raw": "{{baseUrl}}/hotels/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -386,7 +386,7 @@
               "raw": "{\n  \"hotel_name\": \"Tokyo Grand Hotel\",\n  \"city\": \"Tokyo\",\n  \"address\": \"Updated Address, Tokyo\",\n  \"price_per_night\": 130.00,\n  \"rating\": 4.8\n}"
             },
             "url": {
-              "raw": "http://{{baseUrl}}/hotels/1",
+              "raw": "{{baseUrl}}/hotels/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -408,7 +408,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/hotels/1",
+              "raw": "{{baseUrl}}/hotels/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -443,7 +443,7 @@
               "raw": "{\n  \"user_id\": 1,\n  \"hotel_id\": 1,\n  \"check_in\": \"2026-05-20\",\n  \"check_out\": \"2026-05-22\",\n  \"total_amount\": 240.00\n}"
             },
             "url": {
-              "raw": "http://{{baseUrl}}/booking",
+              "raw": "{{baseUrl}}/booking",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -464,7 +464,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/bookings",
+              "raw": "{{baseUrl}}/bookings",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -485,7 +485,7 @@
               }
             ],
             "url": {
-              "raw": "http://{{baseUrl}}/bookings/1",
+              "raw": "{{baseUrl}}/bookings/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -515,7 +515,7 @@
               "raw": "{\n  \"booking_id\": 1,\n  \"amount\": 240.00\n}"
             },
             "url": {
-              "raw": "http://{{baseUrl}}/payment",
+              "raw": "{{baseUrl}}/payment",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -531,7 +531,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "api-gateway:8000"
+      "value": "http://localhost:8000"
     },
     {
       "key": "gatewayKey",

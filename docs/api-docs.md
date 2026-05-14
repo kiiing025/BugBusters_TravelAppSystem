@@ -2,8 +2,24 @@
 
 ## Base URL
 
+Use the API Gateway as the only client-facing base URL.
+
+For local Postman testing on the same computer:
+
+```text
+http://localhost:8000
+```
+
+Inside Docker, services reach the gateway by service name:
+
 ```text
 http://api-gateway:8000
+```
+
+For an instructor/demo environment, replace the local URL with the deployed or tunnel URL, for example:
+
+```text
+https://your-public-gateway-url
 ```
 
 ## Public Header
