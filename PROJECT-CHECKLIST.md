@@ -47,7 +47,7 @@
 - [ ] Live URLs added
 - [ ] Screenshots saved
 
-## Defense
-- [ ] Member explanations ready
-- [ ] Architecture explained
-- [ ] Demo flow ready
+## Presentation
+- [ ] Member sections ready
+- [ ] Architecture summary ready
+- [ ] App flow ready

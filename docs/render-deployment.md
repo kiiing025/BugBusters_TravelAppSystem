@@ -1,6 +1,6 @@
 # Render Deployment Guide
 
-This project can run on Render as Docker web services. The API Gateway is the only URL you should put in Postman for the instructor demo.
+This project can run on Render as Docker web services. The API Gateway is the public entry point for Postman and frontend requests.
 
 ## Important Constraint
 
@@ -12,7 +12,7 @@ Render does not provide managed MySQL. The current app uses MySQL for:
 
 Use an external MySQL provider for those databases, or convert the app to PostgreSQL before using Render Postgres.
 
-## Recommended Demo Setup
+## Recommended Render Setup
 
 Use Render web services for all six PHP services:
 
@@ -147,7 +147,7 @@ FRANKFURTER_URL=https://api.frankfurter.dev/v1
 WIKIPEDIA_REST_URL=https://en.wikipedia.org/api/rest_v1
 ```
 
-## Postman Demo
+## Postman Configuration
 
 In Postman, set:
 
@@ -156,7 +156,7 @@ baseUrl = https://your-api-gateway.onrender.com
 gatewayKey = change-me-gateway-key
 ```
 
-Do not use the downstream service URLs in the demo. The public client flow should go through the gateway only.
+Public client requests should go through the gateway only, not the downstream service URLs.
 
 ## Verification
 

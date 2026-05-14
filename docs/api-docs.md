@@ -16,7 +16,7 @@ Inside Docker, services reach the gateway by service name:
 http://api-gateway:8000
 ```
 
-For an instructor/demo environment, replace the local URL with the deployed or tunnel URL, for example:
+For hosted testing, replace the local URL with the deployed or tunnel URL, for example:
 
 ```text
 https://your-public-gateway-url
