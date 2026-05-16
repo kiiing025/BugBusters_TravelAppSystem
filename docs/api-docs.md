@@ -1,4 +1,4 @@
-# Draft API Documentation
+# API Documentation
 
 ## Project
 
@@ -21,7 +21,7 @@ http://localhost:8000
 Hosted testing:
 
 ```text
-https://your-api-gateway-url.onrender.com
+https://bugbusters-api-gateway.onrender.com
 ```
 
 ## Required Header
@@ -75,6 +75,81 @@ Most routes return JSON in this format:
 
 If validation or authentication fails, the route returns an error status code with a JSON error response.
 
+## Error Response Standard
+
+The API documentation includes expected errors so testers know what should happen when a request has a mistake.
+
+Standard error shape:
+
+```json
+{
+  "status": "error",
+  "message": "Error explanation",
+  "data": []
+}
+```
+
+Some gateway aggregation routes may return:
+
+```json
+{
+  "status": "partial_error",
+  "message": "Some service data could not be completed.",
+  "data": {}
+}
+```
+
+Common status codes:
+
+| Status Code | Meaning | Common Cause |
+| --- | --- | --- |
+| `400 Bad Request` | Request cannot be completed | Invalid query or external API problem |
+| `401 Unauthorized` | Request is not allowed | Missing or wrong `X-API-KEY`, or direct call to an internal service without `X-Internal-Service-Key` |
+| `404 Not Found` | Record or route does not exist | Wrong user, hotel, booking, or endpoint URL |
+| `409 Conflict` | Duplicate data | Registering an email that already exists |
+| `422 Unprocessable Entity` | Validation error | Missing required JSON field or invalid value |
+| `502 Bad Gateway` | Downstream service problem | Service is sleeping, unavailable, or returned a non-JSON error page |
+
+Example missing API key:
+
+```json
+{
+  "status": "error",
+  "message": "Unauthorized gateway request. Provide a valid X-API-KEY header.",
+  "data": []
+}
+```
+
+Example duplicate email:
+
+```json
+{
+  "status": "error",
+  "message": "Email already exists",
+  "data": []
+}
+```
+
+Example missing record:
+
+```json
+{
+  "status": "error",
+  "message": "User not found",
+  "data": []
+}
+```
+
+Example downstream service error:
+
+```json
+{
+  "status": "error",
+  "message": "Service returned a non-JSON response.",
+  "data": "<html>...</html>"
+}
+```
+
 ## Routes
 
 ### Health Check
@@ -111,6 +186,12 @@ Purpose: sends user registration data through the gateway to the Auth Service.
 
 Expected result: user record is created and a `user_id` is returned.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `409 Conflict` if the email already exists.
+- `422 Unprocessable Entity` if `full_name`, `email`, or `password` is missing or invalid.
+
 ### Login User
 
 ```http
@@ -132,6 +213,13 @@ Purpose: verifies a registered user through the Auth Service.
 
 Expected result: login success response with user information.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `401 Unauthorized` if the password is wrong.
+- `404 Not Found` if the email is not registered.
+- `422 Unprocessable Entity` if `email` or `password` is missing.
+
 ### Get Profile
 
 ```http
@@ -141,6 +229,11 @@ GET /profile/1
 Header required: yes.
 
 Purpose: retrieves a user profile by ID through the Auth Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `404 Not Found` if the user ID does not exist.
 
 ### Geocode City
 
@@ -154,6 +247,12 @@ Purpose: calls the Maps Service, which uses Open-Meteo Geocoding to find locatio
 
 Expected data includes city, country, latitude, and longitude.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `city` is missing.
+- `502 Bad Gateway` if the external geocoding API or maps service is unavailable.
+
 ### Weather By City
 
 ```http
@@ -165,6 +264,12 @@ Header required: yes.
 Purpose: the gateway first gets coordinates from the Maps Service, then sends the coordinates to the Weather Service for Open-Meteo forecast data.
 
 Expected data includes location and weather information.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `city` is missing.
+- `502 Bad Gateway` if the maps or weather service is unavailable.
 
 ### Country Information
 
@@ -178,6 +283,12 @@ Purpose: calls REST Countries through the gateway to get country metadata.
 
 Expected data includes country name, capital, region, population, currency code, and flag URL when available.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if both `country` and `country_code` are missing.
+- `404 Not Found` or `502 Bad Gateway` if the country cannot be resolved by the external API.
+
 ### Currency Conversion
 
 ```http
@@ -190,6 +301,12 @@ Purpose: calls Frankfurter through the gateway to convert a currency amount.
 
 Expected data includes base currency, quote currency, amount, exchange rate, and converted amount.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `base` or `quote` is missing.
+- `400 Bad Request` if the currency code is not supported by the external API.
+
 ### Travel Guide
 
 ```http
@@ -201,6 +318,12 @@ Header required: yes.
 Purpose: calls Wikipedia REST through the gateway to get a short topic summary.
 
 Expected data includes title, extract or summary, and source URL when available.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `topic` is missing.
+- `404 Not Found` if Wikipedia has no matching page.
 
 ### Travel Search Aggregation
 
@@ -223,6 +346,12 @@ The gateway combines:
 
 Expected result: one response containing location, weather, country, currency, travel guide, and hotels data.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `city` is missing.
+- `partial_error` if one external service fails but other services still return data.
+
 ### List Hotels
 
 ```http
@@ -232,6 +361,11 @@ GET /hotels?city=Tokyo
 Header required: yes.
 
 Purpose: retrieves hotel records through the Hotels Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `502 Bad Gateway` if the Hotels Service is unavailable.
 
 ### Create Hotel
 
@@ -254,6 +388,69 @@ Body:
 ```
 
 Purpose: creates a hotel record through the Hotels Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `hotel_name`, `city`, `address`, `price_per_night`, or `rating` is missing or invalid.
+
+### Get Hotel
+
+```http
+GET /hotels/1
+```
+
+Header required: yes.
+
+Purpose: retrieves one hotel record by ID through the Hotels Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `404 Not Found` if the hotel ID does not exist.
+
+### Update Hotel
+
+```http
+PUT /hotels/1
+```
+
+Header required: yes.
+
+Body:
+
+```json
+{
+  "hotel_name": "Tokyo Grand Hotel",
+  "city": "Tokyo",
+  "address": "Updated Address, Tokyo",
+  "price_per_night": 130.00,
+  "rating": 4.8
+}
+```
+
+Purpose: updates one hotel record through the Hotels Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `404 Not Found` if the hotel ID does not exist.
+- `422 Unprocessable Entity` if required fields are missing or invalid.
+
+### Delete Hotel
+
+```http
+DELETE /hotels/1
+```
+
+Header required: yes.
+
+Purpose: deletes one hotel record through the Hotels Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `404 Not Found` if the hotel ID does not exist.
 
 ### Create Booking
 
@@ -279,6 +476,11 @@ Purpose: creates a booking through the Payment Service.
 
 Expected result: a `booking_id` is returned.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `422 Unprocessable Entity` if `user_id`, `hotel_id`, `check_in`, `check_out`, or `total_amount` is missing or invalid.
+
 ### Make Payment
 
 ```http
@@ -300,6 +502,12 @@ Purpose: creates a payment record and marks the booking as paid.
 
 Expected result: a `payment_id` is returned and the booking status becomes `paid`.
 
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `404 Not Found` if the booking ID does not exist.
+- `422 Unprocessable Entity` if `booking_id` or `amount` is missing or invalid.
+
 ### List Bookings
 
 ```http
@@ -309,6 +517,26 @@ GET /bookings
 Header required: yes.
 
 Purpose: retrieves bookings and related payment data through the Payment Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `502 Bad Gateway` if the Payment Service is unavailable.
+
+### Get Booking
+
+```http
+GET /bookings/1
+```
+
+Header required: yes.
+
+Purpose: retrieves one booking and its payment data through the Payment Service.
+
+Possible errors:
+
+- `401 Unauthorized` if `X-API-KEY` is missing or invalid.
+- `404 Not Found` if the booking ID does not exist.
 
 ## Postman Test Order
 
@@ -325,18 +553,23 @@ Run these requests in order:
 9. `GET /travel-guide?topic=Tokyo`
 10. `GET /travel-search?city=Tokyo`
 11. `GET /hotels?city=Tokyo`
-12. `POST /booking`
-13. `POST /payment`
-14. `GET /bookings`
+12. `POST /hotels`
+13. `GET /hotels/1`
+14. `PUT /hotels/1`
+15. `POST /booking`
+16. `GET /bookings`
+17. `GET /bookings/1`
+18. `POST /payment`
+19. `DELETE /hotels/1`
 
 ## Postman Variables
 
 ```text
-baseUrl = http://localhost:8000
+baseUrl = https://bugbusters-api-gateway.onrender.com
 gatewayKey = change-me-gateway-key
 ```
 
-For hosted testing, replace `baseUrl` with the Render API Gateway URL.
+For local Docker testing only, replace `baseUrl` with `http://localhost:8000`. For instructor demo or hosted testing, use the Render API Gateway URL.
 
 ## Validation Checklist
 
@@ -348,3 +581,4 @@ For hosted testing, replace `baseUrl` with the Render API Gateway URL.
 - Country, currency, and travel guide routes return external API data.
 - Travel search returns aggregated data from multiple sources.
 - Booking and payment routes save and return records.
+- Intentional mistakes return documented error responses.
