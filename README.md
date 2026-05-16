@@ -60,12 +60,4 @@ Use the service-specific `.env.example` files as the starting point. The gateway
 3. Run `docker compose up --build` from the repository root, or run each service on its configured port.
 4. Call the gateway, not the downstream services, for normal client traffic.
 
-## Group Work
 
-The project is structured for a 5-member group. A clean split is:
-
-1. Gateway and security
-2. Auth service
-3. Weather and geocoding
-4. Hotels and booking flow
-5. Payment and external travel enrichment
