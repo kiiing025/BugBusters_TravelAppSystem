@@ -42,6 +42,19 @@ Run these SQL files in the matching databases:
 - `database/sample_data.sql` for optional sample hotels
 - `database/payment.sql`
 
+For Aiven MySQL, use the service connection values from the Aiven overview page. Aiven requires SSL, so add the downloaded CA certificate to each database-backed Render service as a secret file named:
+
+```text
+aiven-ca.pem
+```
+
+Render makes secret files available at `/etc/secrets/<filename>`, so set this environment variable on `auth-service`, `hotels-service`, and `payment-service`:
+
+```text
+DB_SSL_CA=/etc/secrets/aiven-ca.pem
+DB_SSL_VERIFY_SERVER_CERT=true
+```
+
 ## Render Service Settings
 
 For each service:
@@ -64,11 +77,13 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://your-auth-service.onrender.com
 DB_CONNECTION=mysql
-DB_HOST=your-mysql-host
-DB_PORT=3306
+DB_HOST=bugbusters-travel-mysql-bugbusters-4a8d.c.aivencloud.com
+DB_PORT=19229
 DB_DATABASE=travel_auth
-DB_USERNAME=your-mysql-user
-DB_PASSWORD=your-mysql-password
+DB_USERNAME=avnadmin
+DB_PASSWORD=your-aiven-password
+DB_SSL_CA=/etc/secrets/aiven-ca.pem
+DB_SSL_VERIFY_SERVER_CERT=true
 CACHE_DRIVER=file
 QUEUE_CONNECTION=sync
 ACCEPTED_SECRETS=change-me-auth-secret
