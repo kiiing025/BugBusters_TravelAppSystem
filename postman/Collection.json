@@ -112,7 +112,7 @@
       ]
     },
     {
-      "name": "Travel",
+      "name": "External Services Through Gateway",
       "item": [
         {
           "name": "Weather",
@@ -258,7 +258,7 @@
           }
         },
         {
-          "name": "Travel Search",
+          "name": "Travel Search Aggregation",
           "request": {
             "method": "GET",
             "header": [
