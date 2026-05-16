@@ -41,8 +41,8 @@ abstract class BaseApiService
         curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_TIMEOUT => 20,
+            CURLOPT_CONNECTTIMEOUT => (int) env('SERVICE_CONNECT_TIMEOUT', 20),
+            CURLOPT_TIMEOUT => (int) env('SERVICE_TIMEOUT', 90),
             CURLOPT_CUSTOMREQUEST => strtoupper($method),
             CURLOPT_HTTPHEADER => $headers,
         ]);
