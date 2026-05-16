@@ -14,7 +14,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/health",
+              "raw": "https://bugbusters-api-gateway.onrender.com/health",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -48,7 +48,7 @@
               "raw": "{\n  \"full_name\": \"Josh Cruz\",\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/register",
+              "raw": "https://bugbusters-api-gateway.onrender.com/register",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -77,7 +77,7 @@
               "raw": "{\n  \"email\": \"josh@example.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/login",
+              "raw": "https://bugbusters-api-gateway.onrender.com/login",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -98,7 +98,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/profile/1",
+              "raw": "https://bugbusters-api-gateway.onrender.com/profile/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -125,7 +125,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/weather?city=Tokyo",
+              "raw": "https://bugbusters-api-gateway.onrender.com/weather?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -152,7 +152,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/geocode?city=Tokyo",
+              "raw": "https://bugbusters-api-gateway.onrender.com/geocode?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -179,7 +179,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/country?country=Japan",
+              "raw": "https://bugbusters-api-gateway.onrender.com/country?country=Japan",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -206,7 +206,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/currency?base=PHP&quote=USD&amount=100",
+              "raw": "https://bugbusters-api-gateway.onrender.com/currency?base=PHP&quote=USD&amount=100",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -241,7 +241,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/travel-guide?topic=Tokyo",
+              "raw": "https://bugbusters-api-gateway.onrender.com/travel-guide?topic=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -268,7 +268,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/travel-search?city=Tokyo",
+              "raw": "https://bugbusters-api-gateway.onrender.com/travel-search?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -300,7 +300,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/hotels?city=Tokyo",
+              "raw": "https://bugbusters-api-gateway.onrender.com/hotels?city=Tokyo",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -335,7 +335,7 @@
               "raw": "{\n  \"hotel_name\": \"BugBusters Hotel\",\n  \"city\": \"Tokyo\",\n  \"address\": \"Shibuya, Tokyo\",\n  \"price_per_night\": 150.00,\n  \"rating\": 4.6\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/hotels",
+              "raw": "https://bugbusters-api-gateway.onrender.com/hotels",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -356,7 +356,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/hotels/1",
+              "raw": "https://bugbusters-api-gateway.onrender.com/hotels/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -386,7 +386,7 @@
               "raw": "{\n  \"hotel_name\": \"Tokyo Grand Hotel\",\n  \"city\": \"Tokyo\",\n  \"address\": \"Updated Address, Tokyo\",\n  \"price_per_night\": 130.00,\n  \"rating\": 4.8\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/hotels/1",
+              "raw": "https://bugbusters-api-gateway.onrender.com/hotels/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -408,7 +408,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/hotels/1",
+              "raw": "https://bugbusters-api-gateway.onrender.com/hotels/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -443,7 +443,7 @@
               "raw": "{\n  \"user_id\": 1,\n  \"hotel_id\": 1,\n  \"check_in\": \"2026-05-20\",\n  \"check_out\": \"2026-05-22\",\n  \"total_amount\": 240.00\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/booking",
+              "raw": "https://bugbusters-api-gateway.onrender.com/booking",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -464,7 +464,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/bookings",
+              "raw": "https://bugbusters-api-gateway.onrender.com/bookings",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -485,7 +485,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/bookings/1",
+              "raw": "https://bugbusters-api-gateway.onrender.com/bookings/1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -515,7 +515,7 @@
               "raw": "{\n  \"booking_id\": 1,\n  \"amount\": 240.00\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/payment",
+              "raw": "https://bugbusters-api-gateway.onrender.com/payment",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -539,3 +539,4 @@
     }
   ]
 }
+
