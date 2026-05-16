@@ -1,3 +1,5 @@
+name: bugbusters_travelappsystem
+
 services:
   api-gateway:
     build:
