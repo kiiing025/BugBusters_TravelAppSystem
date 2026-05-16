@@ -229,6 +229,6 @@ WIKIPEDIA_REST_URL=https://en.wikipedia.org/api/rest_v1
 For Postman after deployment:
 
 ```text
-baseUrl=bugbusters-api-gateway.onrender.com
+baseUrl=https://bugbusters-api-gateway.onrender.com
 gatewayKey=change-me-gateway-key
 ```

@@ -531,7 +531,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8000"
+      "value": "https://bugbusters-api-gateway.onrender.com"
     },
     {
       "key": "gatewayKey",
